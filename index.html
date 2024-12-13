@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบลงเวลา</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f3e5f5; /* สีพื้นหลังโทนม่วงอ่อน */
+        }
+        .container {
+            text-align: center;
+            border: 1px solid #d1c4e9; /* เส้นขอบสีม่วงอ่อน */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(103, 58, 183, 0.2); /* เงาสีม่วง */
+            background-color: #ffffff;
+            width: 300px;
+        }
+        .hidden {
+            display: none;
+        }
+        .time {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #673ab7; /* สีม่วงสด */
+        }
+        .label {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #5e35b1; /* สีม่วงเข้ม */
+        }
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin: 0 auto 20px;
+            font-size: 1rem;
+            border: 1px solid #d1c4e9; /* สีขอบช่องกรอก */
+            border-radius: 5px;
+            text-align: center;
+            background-color: #f3e5f5; /* พื้นหลังช่องกรอก */
+            color: #4a148c; /* สีข้อความในช่องกรอก */
+        }
+        .input-box:focus {
+            outline: none;
+            border-color: #7e57c2; /* สีขอบเมื่อเลือกช่อง */
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button.submit {
+            background-color: #7e57c2; /* สีม่วง */
+            color: white;
+        }
+        .button.submit:hover {
+            background-color: #5e35b1; /* สีม่วงเข้มขึ้นเมื่อ hover */
+        }
+        .button.back {
+            background-color: #d1c4e9; /* สีม่วงอ่อน */
+            color: #4a148c; /* สีม่วงเข้ม */
+        }
+        .button.back:hover {
+            background-color: #b39ddb; /* สีม่วงกลางเมื่อ hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- หน้าแรก -->
+    <div class="container" id="input-container">
+        <div class="time" id="current-time">--:-- --</div>
+        <div class="label">กรอกรหัสพนักงาน</div>
+        <input type="text" class="input-box" id="employee-id" placeholder="รหัสพนักงาน">
+        <button class="button submit" onclick="submitTime()">ลงเวลา</button>
+        <button class="button back" onclick="goBack()">ย้อนกลับ</button>
+    </div>
+
+    <!-- หน้ายืนยัน -->
+    <div class="container hidden" id="summary-container">
+        <div class="time" id="summary-time">--:-- --</div>
+        <div class="label">ยืนยันการลงเวลา</div>
+        <div id="summary-employee-id" style="color: #673ab7; font-size: 1.2rem; font-weight: bold;"></div>
+        <button class="button back" onclick="returnToInput()">ย้อนกลับ</button>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedTime = `${String(hours % 12 || 12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+            
+            // อัปเดตเวลาในทั้งสองหน้า
+            document.getElementById('current-time').textContent = formattedTime;
+            document.getElementById('summary-time').textContent = formattedTime;
+        }
+
+        function submitTime() {
+            const employeeId = document.getElementById('employee-id').value.trim();
+            if (employeeId === '') {
+                alert('กรุณากรอกรหัสพนักงาน');
+                return;
+            }
+
+            // แสดงผลรหัสพนักงาน
+            document.getElementById('summary-employee-id').textContent = employeeId;
+
+            // สลับหน้า
+            document.getElementById('input-container').classList.add('hidden');
+            document.getElementById('summary-container').classList.remove('hidden');
+        }
+
+        function returnToInput() {
+            document.getElementById('input-container').classList.remove('hidden');
+            document.getElementById('summary-container').classList.add('hidden');
+        }
+
+        function goBack() {
+            alert('ยังไม่ได้ตั้งค่ากลับไปหน้าอื่น!');
+        }
+
+        // อัปเดตเวลาทุกวินาที
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
